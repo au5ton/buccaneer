@@ -1,0 +1,10 @@
+{
+  "name": "buccaneer",
+  "version": "1.0.0",
+  "description": "Automatically upload torrents to FW",
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "thepiratebay": "^0.2.5"
+  }
+}
