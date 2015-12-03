@@ -121,83 +121,83 @@ FW.categoryMatcher = function(torrent) {
         'General Documents': 52
     };
 
-    if(torrent.category.id.charAt(0) === '1') {
-        if(torrent.category.id.charAt(2) === '1') {
+    if(torrent.subcategory.id.charAt(0) === '1') {
+        if(torrent.subcategory.id.charAt(2) === '1') {
             return Ledger['Audio - Music'];
         }
-        else if(torrent.category.id.charAt(2) === '2') {
+        else if(torrent.subcategory.id.charAt(2) === '2') {
             return Ledger['Audio - Audiobooks'];
         }
         else {
             return Ledger['Audio - General'];
         }
     }
-    else if(torrent.category.id.charAt(0) === '2'){
-        if(torrent.category.id.charAt(2) === '1' || torrent.category.id.charAt(2) === '2' || torrent.category.id.charAt(2) === '7') {
+    else if(torrent.subcategory.id.charAt(0) === '2'){
+        if(torrent.subcategory.id.charAt(2) === '1' || torrent.subcategory.id.charAt(2) === '2' || torrent.subcategory.id.charAt(2) === '7') {
             return Ledger['Video - Movies'];
         }
-        else if(torrent.category.id.charAt(2) === '5' || torrent.category.id.charAt(2) === '8') {
+        else if(torrent.subcategory.id.charAt(2) === '5' || torrent.subcategory.id.charAt(2) === '8') {
             return Ledger['Video - TV Shows'];
         }
         else {
             return Ledger['Video - General'];
         }
     }
-    else if(torrent.category.id.charAt(0) === '3'){
-        if(torrent.category.id.charAt(2) === '1') {
+    else if(torrent.subcategory.id.charAt(0) === '3'){
+        if(torrent.subcategory.id.charAt(2) === '1') {
             return Ledger['Applications - Windows'];
         }
-        else if(torrent.category.id.charAt(2) === '2') {
+        else if(torrent.subcategory.id.charAt(2) === '2') {
             return Ledger['Applications - Mac'];
         }
-        else if(torrent.category.id.charAt(2) === '5') {
+        else if(torrent.subcategory.id.charAt(2) === '5') {
             return Ledger['Apps - iOS'];
         }
-        else if(torrent.category.id.charAt(2) === '6') {
+        else if(torrent.subcategory.id.charAt(2) === '6') {
             return Ledger['Apps - Android'];
         }
         else {
             return Ledger['General Documents'];
         }
     }
-    else if(torrent.category.id.charAt(0) === '4'){
-        if(torrent.category.id.charAt(2) === '1') {
+    else if(torrent.subcategory.id.charAt(0) === '4'){
+        if(torrent.subcategory.id.charAt(2) === '1') {
             return Ledger['Games - PC'];
         }
-        else if(torrent.category.id.charAt(2) === '2') {
+        else if(torrent.subcategory.id.charAt(2) === '2') {
             return Ledger['Games - Mac'];
         }
-        else if(torrent.category.id.charAt(2) === '3') {
+        else if(torrent.subcategory.id.charAt(2) === '3') {
             return Ledger['Games - Playstation'];
         }
-        else if(torrent.category.id.charAt(2) === '4') {
+        else if(torrent.subcategory.id.charAt(2) === '4') {
             return Ledger['Games - Xbox'];
         }
-        else if(torrent.category.id.charAt(2) === '5') {
+        else if(torrent.subcategory.id.charAt(2) === '5') {
             return Ledger['Games - Wii'];
         }
-        else if(torrent.category.id.charAt(2) === '6') {
+        else if(torrent.subcategory.id.charAt(2) === '6') {
             return Ledger['Games - Handheld'];
         }
-        else if(torrent.category.id.charAt(2) === '7') {
+        else if(torrent.subcategory.id.charAt(2) === '7') {
             return Ledger['Games - iOS'];
         }
-        else if(torrent.category.id.charAt(2) === '8') {
+        else if(torrent.subcategory.id.charAt(2) === '8') {
             return Ledger['Games - Android'];
         }
         else {
             return Ledger['General Documents'];
         }
     }
-    else if(torrent.category.id.charAt(0) === '5'){
-        if(torrent.category.id.charAt(2) === '1' || torrent.category.id.charAt(2) === '2' || torrent.category.id.charAt(2) === '5' || torrent.category.id.charAt(2) === '6') {
+    else if(torrent.subcategory.id.charAt(0) === '5'){
+        if(torrent.subcategory.id.charAt(2) === '1' || torrent.subcategory.id.charAt(2) === '2' || torrent.subcategory.id.charAt(2) === '5' || torrent.subcategory.id.charAt(2) === '6') {
             return Ledger['Video - Movies'];
         }
         else {
             return Ledger['Video - General'];
         }
     }
-    else if(torrent.category.id === '601'){
+    else if(torrent.subcategory.id === '601'){
         return Ledger['E-Books'];
     }
     else {
