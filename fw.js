@@ -5,6 +5,8 @@ var constants = require('./constants'); //Not included in source control for sec
 var http = require('http');
 var querystring = require('querystring');
 
+FW.postCount = 0;
+
 FW.authenticate = function(callback) {
 
     if(callback === undefined) {
@@ -46,6 +48,53 @@ FW.authenticate = function(callback) {
     req.end();
 };
 
+FW.chatMessage = function(message, callback) {
+
+    //console.log('Attempting to submit \''+torrent.name+'\' to Fluff World...');
+
+    var postData = querystring.stringify({
+        'chat_text': message
+    });
+
+    var data = '';
+
+    var req = http.request({
+        hostname: constants.host,
+        path: '/scripts/chat_post.php',
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'Content-Length': Buffer.byteLength(postData),
+            'Cookie': constants.cookie
+        }
+    }, function(res) {
+        //console.log('STATUS: ' + res.statusCode);
+        //console.log('HEADERS: ' + JSON.stringify(res.headers));
+        res.setEncoding('utf8');
+        res.on('data', function (chunk) {
+            data += chunk;
+        });
+        res.on('end', function() {
+            if(res.statusCode === 200) {
+                console.log('✅ chatMessage');
+            }
+            else {
+                console.log('⚠️ chatMessage');
+            }
+            //console.log(data);
+            callback();
+        })
+    });
+
+    req.on('error', function(e) {
+        console.log('problem with request: ' + e.message);
+    });
+
+    // write data to request body
+    req.write(postData);
+    req.end();
+};
+
 FW.postTorrent = function(torrent, callback) {
 
     console.log('Attempting to submit \''+torrent.name+'\' to Fluff World...');
@@ -77,6 +126,7 @@ FW.postTorrent = function(torrent, callback) {
         res.on('end', function() {
             if(data === 'success') {
                 console.log('✅ postTorrent');
+                FW.postCount++;
             }
             else {
                 console.log('⚠️ postTorrent');
