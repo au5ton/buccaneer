@@ -2,7 +2,7 @@ var FW = {};
 
 var constants = require('./constants'); //Not included in source control for security
 
-var http = require('http');
+var https = require('https');
 var querystring = require('querystring');
 
 FW.postCount = 0;
@@ -17,7 +17,7 @@ FW.authenticate = function(callback) {
 
     console.log('Attempting to authenticate with cookie '+constants.cookie);
 
-    var req = http.request({
+    var req = https.request({
         hostname: constants.host,
         path: '/home.php',
         method: 'GET',
@@ -52,13 +52,17 @@ FW.chatMessage = function(message, callback) {
 
     //console.log('Attempting to submit \''+torrent.name+'\' to Fluff World...');
 
+    if(callback === undefined) {
+        callback = function(){};
+    }
+
     var postData = querystring.stringify({
         'chat_text': message
     });
 
     var data = '';
 
-    var req = http.request({
+    var req = https.request({
         hostname: constants.host,
         path: '/scripts/chat_post.php',
         method: 'POST',
@@ -107,7 +111,7 @@ FW.postTorrent = function(torrent, callback) {
 
     var data = '';
 
-    var req = http.request({
+    var req = https.request({
         hostname: constants.host,
         path: '/scripts/torrent_upload.php',
         method: 'POST',

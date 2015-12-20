@@ -3,11 +3,11 @@ var fw = require('./fw');
 var https = require('https');
 
 var LOGIN = {};
-var page = 11; //TVD
+var page = 0; //TVD
 function recursive_torrents() {
     console.log('STARTING PAGE '+page);
     fw.authenticate(function() {
-        tpb.search('the vampire diaries', {
+        tpb.search('switched at birth', {
             category: '0',
             page: page,
             orderBy: '7'
@@ -21,7 +21,7 @@ function recursive_torrents() {
                 }
             }
             page++;
-            recursive();
+            recursive_torrents();
         }).catch(function(err){
             console.log(err);
         });
@@ -79,7 +79,9 @@ if(process.argv[2] === '--spamChat') {
 }
 else if(process.argv[2] === '--chat') {
     chatMessage = process.argv[3];
-    fw.chatMessage(chatMessage);
+    fw.authenticate(function(){
+        fw.chatMessage(chatMessage);
+    });
 }
 else if(process.argv[2] === '--spamTorrents') {
     recursive_torrents();
