@@ -7,7 +7,7 @@ var page = 0; //TVD
 function recursive_torrents() {
     console.log('STARTING PAGE '+page);
     fw.authenticate(function() {
-        tpb.search('switched at birth', {
+        tpb.search('The Big Bang Theory', {
             category: '0',
             page: page,
             orderBy: '7'
@@ -33,11 +33,9 @@ function recursive_toptorrents() {
         tpb.topTorrents()
         .then(function(results){
             for(var i = 0; i < results.length; i++) {
-                if(fw.postCount < postLimit) {
                     fw.postTorrent(results[i], function(){
                         console.log('done');
                     });
-                }
                 //console.log(fw.categoryMatcher(results[i]));
             }
         }).catch(function(err){
@@ -91,7 +89,7 @@ else if(process.argv[2] === '--spamTopTorrents') {
 }
 else {
 
-    tpb.search('switched at birth', {
+    tpb.search('The Big Bang Theory', {
         category: '0',
         orderBy: '7'
     }).then(function(results){
