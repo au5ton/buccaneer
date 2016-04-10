@@ -1,7 +1,7 @@
 {
   "name": "buccaneer",
   "version": "1.0.0",
-  "description": "Automatically upload torrents to FW",
+  "description": "node app for posting torrents to Fluff World",
   "author": "",
   "license": "MIT",
   "dependencies": {
