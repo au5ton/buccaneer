@@ -1,4 +1,4 @@
 buccaneer
 =========
 
-Node.js app for interacting with FW.
+node app for posting torrents to Fluff World
