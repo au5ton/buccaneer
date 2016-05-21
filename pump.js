@@ -1,6 +1,6 @@
 var fs = require('fs');
 
-var filePath = '/Users/austin/Desktop/tpb3.json';
+var filePath = '/Users/austin/Desktop/tpb3.smaller.json';
 var buf = '';
 
 //fw.authenticate(function(){
@@ -31,19 +31,19 @@ function processLine(line) { // here's where we do something with a line
 
     if (line.length > 0) { // ignore empty lines
         let obj = JSON.parse(line); // parse the JSON
-        //console.log(obj); // do something with the data here!
+        console.log(obj); // do something with the data here!
 
         /*
         Important stuff: Id, Title, CategoryCode, Magnet
         */
 
-        let temp = {};
+        /*let temp = {};
         temp['id'] = obj['Id'];
         temp['title'] = obj['Title'];
         temp['categoryCode'] = obj['CategoryCode'];
         temp['magnet'] = obj['Magnet'];
 
         fs.appendFileSync('/Users/austin/Desktop/tpb3.smaller.json', JSON.stringify(temp)+'\n', 'utf8');
-
+        */
     }
 }
