@@ -7,8 +7,8 @@ var page = 0; //TVD
 function recursive_torrents() {
     console.log('STARTING PAGE '+page);
     fw.authenticate(function() {
-        tpb.search('', {
-            category: '0',
+        tpb.search('teen wolf', {
+            category: '00',
             page: page,
             orderBy: '7'
         })
@@ -105,6 +105,12 @@ else if(process.argv[2] === '--chat') {
         fw.chatMessage(chatMessage);
     });
 }
+else if(process.argv[2] === '--chatRainbow') {
+    chatMessage = process.argv[3];
+    fw.authenticate(function(){
+        fw.chatMessage(chatMessage, undefined, true);
+    });
+}
 else if(process.argv[2] === '--spamTorrents') {
     recursive_torrents();
 }
@@ -125,7 +131,7 @@ else if(process.argv[2] === '--search') {
             query = process.argv.splice(i+1).join(' ');
         }
     }
-    
+
     if(category === 'ALL_AUDIO') {
         category = '100';
     }
@@ -141,9 +147,9 @@ else if(process.argv[2] === '--search') {
     if(category === 'ALL_PORN') {
         category = '500';
     }
-    
+
     console.log('Searching TPB under category \''+category+'\' for: \''+query+'\'...');
-    
+
     tpb.search(query, {
         category: category,
         orderBy: '7'
@@ -169,8 +175,8 @@ else {
         for(var i = 0; i < results.length; i++) {
             console.log(results[i]['name']);
             console.log(results[i]['seeders']);
-            //console.log(results[i]['magnetLink']);
-            //console.log(fw.categoryMatcher(results[i]));
+            console.log(results[i]['magnetLink']);
+            console.log(fw.categoryMatcher(results[i]));
         }
     }).catch(function(err){
         console.log(err);

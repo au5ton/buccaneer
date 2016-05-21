@@ -48,16 +48,23 @@ FW.authenticate = function(callback) {
     req.end();
 };
 
-FW.chatMessage = function(message, callback) {
+FW.chatMessage = function(message, callback, rainbow) {
 
     //console.log('Attempting to submit \''+torrent.name+'\' to Fluff World...');
 
     if(callback === undefined) {
         callback = function(){};
     }
+    if(rainbow === undefined) {
+        rainbow = false;
+    }
+    else if(rainbow !== true) {
+        rainbow = false;
+    }
 
     var postData = querystring.stringify({
-        'chat_text': message
+        'chat_text': message,
+        'rainbow': rainbow
     });
 
     var data = '';
