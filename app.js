@@ -1,129 +1,39 @@
+'use strict';
+
+var api = require('fwapi');
+var client = require('au5ton-logger');
 var tpb = require('thepiratebay');
-var fw = require('./fw');
-var https = require('https');
+var colors = require('colors');
 
-var LOGIN = {};
-var page = 0; //TVD
-function recursive_torrents() {
-    console.log('STARTING PAGE '+page);
-    fw.authenticate(function() {
-        tpb.search('teen wolf', {
-            category: '00',
-            page: page,
-            orderBy: '7'
-        })
-        .then(function(results){
-            for(var i = 0; i < results.length; i++) {
-                if(results[i]['seeders'] > 0) {
-                    fw.postTorrent(results[i], function(){
-                        console.log('done');
-                    });
-                }
-            }
-            page++;
-            recursive_torrents();
-        }).catch(function(err){
-            console.log(err);
-        });
-    });
+const LOGIN = {
+    user: process.argv[2],
+    pass: process.argv[3]
+};
+
+const ACTION = 4, MODE = 5;
+
+let page = 0;
+
+if(process.argv[2] === 'help' || process.argv[2] === '--help') {
+    let ind = '    ';
+    client.log('Key:'.yellow);
+    client.log(ind, '{app} = node /path/to/app.js'.yellow);
+    client.log(ind, '<required field>'.yellow);
+    client.log(ind, '[optional field]'.yellow);
+    client.log('Syntax:'.yellow);
+    client.log(ind, 'Unauthenticated tasks:'.yellow);
+    client.log(ind, ind, 'To search: {app} search [-cat <cat code>] [-query <querystring>]'.yellow);
+    client.log(ind, ind, 'To show top: {app} show top'.yellow);
+    client.log(ind, 'Authenticated tasks:'.yellow);
+    client.log(ind, ind, 'To post: {app} <username> <password> post <all | top | best>'.yellow);
+    process.exit();
 }
 
-function recursive_toptorrents() {
-    fw.authenticate(function() {
-        tpb.topTorrents()
-        .then(function(results){
-            for(var i = 0; i < results.length; i++) {
-                    fw.postTorrent(results[i], function(){
-                        console.log('done');
-                    });
-                //console.log(fw.categoryMatcher(results[i]));
-            }
-        }).catch(function(err){
-            console.log(err);
-        });
-    });
-}
-
-function recursive_best_torrents() {
-    console.log('STARTING PAGE '+page);
-    fw.authenticate(function() {
-        tpb.search('', {
-            category: '0',
-            page: page,
-            orderBy: '7'
-        })
-        .then(function(results){
-            for(var i = 0; i < results.length; i++) {
-                if(results[i]['seeders'] > 0) {
-                    fw.postTorrent(results[i], function(){
-                        console.log('done');
-                    });
-                }
-            }
-            page++;
-            recursive_best_torrents();
-        }).catch(function(err){
-            console.log(err);
-        });
-    });
-}
-
-var chatCount = 1;
-var chatLimit;
-var chatMessage;
-var chatLimitInfinite = false;
-
-function recursive_chat() {
-    console.log('Posting chat message #'+chatCount+'...');
-    fw.chatMessage(chatMessage, function(){
-        if(chatLimitInfinite === true) {
-            chatCount++;
-            recursive_chat();
-        }
-        else if(chatCount < chatLimit) {
-            chatCount++;
-            recursive_chat();
-        }
-    });
-}
-
-
-if(process.argv[2] === '--spamChat') {
-    chatMessage = process.argv[3];
-    chatLimit = parseInt(process.argv[4]);
-    if(chatLimit === -1) {
-        chatLimitInfinite = true;
-        console.log('WARNING! Chat limit set to INFINITY!');
-    }
-    fw.authenticate(function(){
-        recursive_chat();
-    });
-}
-else if(process.argv[2] === '--chat') {
-    chatMessage = process.argv[3];
-    fw.authenticate(function(){
-        fw.chatMessage(chatMessage);
-    });
-}
-else if(process.argv[2] === '--chatRainbow') {
-    chatMessage = process.argv[3];
-    fw.authenticate(function(){
-        fw.chatMessage(chatMessage, undefined, true);
-    });
-}
-else if(process.argv[2] === '--spamTorrents') {
-    recursive_torrents();
-}
-else if(process.argv[2] === '--spamTopTorrents') {
-    recursive_toptorrents();
-}
-else if(process.argv[2] === '--spamBestTorrents') {
-    recursive_best_torrents();
-}
-else if(process.argv[2] === '--search') {
-    var category = '0';
-    var query = '';
-    for(var i = 0; i < process.argv.length; i++) {
+if(process.argv[2] === 'search') {
+    let category = '0';
+    let query = '';
+    //Search for arguments
+    for(let i = 0; i < process.argv.length; i++) {
         if(process.argv[i] === '-cat') {
             category = process.argv[i+1];
         }
@@ -148,49 +58,102 @@ else if(process.argv[2] === '--search') {
         category = '500';
     }
 
-    console.log('Searching TPB under category \''+category+'\' for: \''+query+'\'...');
+    client.log('Searching TPB under category \'',category,'\' for: \'',query,'\'...');
 
     tpb.search(query, {
         category: category,
         orderBy: '7'
     }).then(function(results){
-        //console.log(results);
         for(var i = 0; i < results.length; i++) {
-            console.log(results[i]['name']);
-            console.log(results[i]['seeders']);
-            //console.log(results[i]['magnetLink']);
-            //console.log(fw.categoryMatcher(results[i]));
+            client.log('[',results[i]['seeders'], '] ', results[i]['name']);
         }
     }).catch(function(err){
-        console.log(err);
+        client.log(err)
     });
+}
+else if(process.argv[2] === 'show') {
+    if(process.argv[3] === 'top') {
+        tpb.topTorrents()
+        .then(function(results){
+            for(var i = 0; i < results.length; i++) {
+                let ind = '    ';
+                client.log('[',results[i]['seeders'], '] ', results[i]['name']);
+                client.log(ind, 'cat:',results[i]['subcategory']);
+            }
+        }).catch(function(err){
+            client.log(err);
+        });
+    }
 }
 else {
-
-    tpb.search('minecraft', {
-        category: '0',
-        orderBy: '7'
-    }).then(function(results){
-        //console.log(results);
-        for(var i = 0; i < results.length; i++) {
-            console.log(results[i]['name']);
-            console.log(results[i]['seeders']);
-            console.log(results[i]['magnetLink']);
-            console.log(fw.categoryMatcher(results[i]));
+    api.auth.authenticate(LOGIN.user, LOGIN.pass, function(status){
+        if(status === 'success') {
+            api.torrent.setCookie(api.auth.cookie);
+            if(process.argv[ACTION] === 'post') {
+                recur(process.argv[MODE]);
+            }
         }
-    }).catch(function(err){
-        console.log(err);
-    });
-
-    // tpb.topTorrents()
-    // .then(function(results){
-    //     for(var i = 0; i < results.length; i++) {
-    //         console.log(results[i]['name']);
-    //         console.log(results[i]['seeders']);
-    //         //console.log(fw.categoryMatcher(results[i]));
-    //     }
-    //
-    // }).catch(function(err){
-    //     console.log(err);
-    // });
+    },true);
 }
+
+
+
+let recur = function(action) {
+    if(action === 'all') {
+        recur('top');
+        recur('best');
+    }
+    else if(action === 'top') {
+        tpb.topTorrents()
+        .then(function(results){
+            for(var i = 0; i < results.length; i++) {
+                let tor = new api.torrent.Torrent({
+                    name: results[i]['name'],
+                    magnetLink: results[i]['magnetLink'],
+                    subcategory: results[i]['subcategory']['id']
+                });
+                api.torrent.locallyValidateTorrent(tor, function(status) {
+                    if(status === 'success') {
+                        api.torrent.postTorrent(tor, function(){
+                            //done
+                        });
+                    }
+                });
+            }
+        }).catch(function(err){
+            client.log(err);
+        });
+    }
+    else if(action === 'best') {
+        tpb.search('', {
+            category: '0',
+            page: page,
+            orderBy: '7'
+        })
+        .then(function(results){
+            for(var i = 0; i < results.length; i++) {
+                let tor = new api.torrent.Torrent({
+                    name: results[i]['name'],
+                    magnetLink: results[i]['magnetLink'],
+                    subcategory: results[i]['subcategory']['id']
+                });
+                api.torrent.locallyValidateTorrent(tor, function(status) {
+                    if(status === 'success') {
+                        api.torrent.postTorrent(tor, function(){
+                            //done
+                        });
+                    }
+                });
+            }
+            page++;
+            if(results.length !== 0) {
+                recur('best');
+            }
+            else {
+                client.warn('Can\'t find anymore torrents after page ', page, '. Stopping.')
+            }
+        }).catch(function(err){
+            client.log(err);
+        });
+    }
+};

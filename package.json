@@ -1,10 +1,21 @@
 {
-  "name": "buccaneer",
-  "version": "1.0.0",
-  "description": "node app for posting torrents to Fluff World",
-  "author": "",
-  "license": "MIT",
-  "dependencies": {
-    "thepiratebay": "^0.2.5"
-  }
+    "name": "buccaneer",
+    "version": "1.0.0",
+    "description": "node app for posting torrents to Fluff World",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/au5ton/buccaneer.git"
+    },
+    "author": "Austin Jackson <austinjckson@gmail.com>",
+    "license": "MIT",
+    "bugs": {
+        "url": "https://github.com/au5ton/buccaneer/issues"
+    },
+    "homepage": "https://github.com/au5ton/buccaneer#readme",
+    "dependencies": {
+        "thepiratebay": "^0.2.5",
+        "fwapi": "^0.3.20",
+        "au5ton-logger": "^1.1.2",
+        "colors": "^1.1.2"
+    }
 }
