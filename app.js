@@ -114,9 +114,12 @@ let recur = function(action) {
                 });
                 api.torrent.locallyValidateTorrent(tor, function(status) {
                     if(status === 'success') {
-                        api.torrent.postTorrent(tor, function(){
-                            //done
-                        });
+                        //Prevents posting torrents that are verified and categorized as porn
+                        if(!tor['subcategory'].startsWith('5')) {
+                            api.torrent.postTorrent(tor, function(){
+                                //done
+                            });
+                        }
                     }
                 });
             }
@@ -139,9 +142,12 @@ let recur = function(action) {
                 });
                 api.torrent.locallyValidateTorrent(tor, function(status) {
                     if(status === 'success') {
-                        api.torrent.postTorrent(tor, function(){
-                            //done
-                        });
+                        //Prevents posting torrents that are verified and categorized as porn
+                        if(!tor['subcategory'].startsWith('5')) {
+                            api.torrent.postTorrent(tor, function(){
+                                //done
+                            });
+                        }
                     }
                 });
             }
